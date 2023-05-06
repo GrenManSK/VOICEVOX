@@ -1,9 +1,25 @@
+"""
+Start as a module
+"""
+
 import zipfile
 import os
 import argparse
 from tqdm import tqdm
 import requests
 import logging
+import glob
+
+
+def get_size(start_path='.'):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(start_path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            if not os.path.islink(fp):
+                total_size += os.path.getsize(fp)
+
+    return total_size
 
 
 def download(url: str, fname: str, chunk_size: int = 1024) -> bool:
@@ -38,13 +54,15 @@ def download(url: str, fname: str, chunk_size: int = 1024) -> bool:
     return True
 
 
-def unpack(name):
+def unpack(name, path='./'):
     with zipfile.ZipFile(name, mode='r') as zip:
-        for member in tqdm(iterable=zip.namelist(), total=len(zip.namelist()), desc='Extracting '):
+        size = len(zip.namelist())
+        for member in tqdm(iterable=zip.namelist(), total=size, desc='Extracting '):
             try:
-                zip.extract(member)
+                zip.extract(member, path)
+                member = os.path.join(path, member)
                 tqdm.write(
-                    f"{os.path.basename(member)}(" + str(os.path.getsize(member)) + "B)")
+                    f"{os.path.basename( member)}(" + str(os.path.getsize(member)) + "B)")
             except zipfile.error as e:
                 pass
         zip.close()
@@ -54,7 +72,29 @@ parser = argparse.ArgumentParser()
 
 VOICEVOX_ENGINE_URL = 'https://github.com/VOICEVOX/voicevox/releases/download/0.14.6/voicevox-windows-cpu-0.14.6.zip'
 
+UNSPECIFIED = object()
 
-parser.add_argument('--mode', choices=['merge', 'split'], default='merge')
+parser.add_argument('--force-reinstall', choices=[],
+                    nargs='?', default=UNSPECIFIED)
+parser.add_argument('--as-not-module', choices=[],
+                    nargs='?', default=UNSPECIFIED)
 
 args = parser.parse_args()
+
+
+if not os.path.exists('VOICEVOX/VOICEVOX/') or args.force_reinstall is None:
+    download(VOICEVOX_ENGINE_URL, 'VOICEVOX_engine.zip')
+    if args.as_not_module is None:
+        unpack('VOICEVOX_engine.zip')
+    else:
+        unpack('VOICEVOX_engine.zip', 'VOICEVOX')
+    os.remove('VOICEVOX_engine.zip')
+else:
+    for file_name in list(set(glob.glob('./**/**/**/VOICEVOX.exe', recursive=True))):
+        if get_size(os.path.dirname(file_name))/1024/1024 < 1200:
+            download(VOICEVOX_ENGINE_URL, 'VOICEVOX_engine.zip')
+            if args.as_not_module is None:
+                unpack('VOICEVOX_engine.zip')
+            else:
+                unpack('VOICEVOX_engine.zip', 'VOICEVOX')
+            os.remove('VOICEVOX_engine.zip')
