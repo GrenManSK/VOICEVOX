@@ -1,0 +1,13 @@
+keyboard==0.13.5
+mtranslate==1.8
+openai_whisper==20230124
+PyAudio==0.2.13
+PyAutoGUI==0.9.53
+pydub==0.25.1
+pygame==2.2.0
+PyGetWindow==0.0.9
+sounddevice==0.4.6
+soundfile==0.12.1
+voicevox.py==1.0.2
+windows-curses==2.3.1
+filesplit==4.0.1
