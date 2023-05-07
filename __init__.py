@@ -66,6 +66,7 @@ def unpack(name, path='./'):
             except zipfile.error as e:
                 pass
         zip.close()
+    print('\n\n')
 
 
 parser = argparse.ArgumentParser()
