@@ -87,7 +87,7 @@ history_jap = []
 error = []
 
 
-def main(stdscr):
+def main(stdscr, input_index):
     global current_row
     global window
     global current
@@ -353,7 +353,7 @@ def main(stdscr):
 
         p = pyaudio.PyAudio()
         stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE,
-                        input=True, frames_per_buffer=CHUNK, input_device_index=1)
+                        input=True, frames_per_buffer=CHUNK, input_device_index=input_index)
 
         string(current_row, 0, 'Opening stream DONE', 1)
 
@@ -475,5 +475,3 @@ def main(stdscr):
         except KeyboardInterrupt:
             quit()
             
-
-wrapper(main)

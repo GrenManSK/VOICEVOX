@@ -1,5 +1,6 @@
 import curses
 from curses import wrapper
+from __get_index__ import get_index
 
 speech_to_waifu = [
     '   SSSSSSSSSSSSSSS                                                                               hhhhhhh                ',
@@ -476,4 +477,4 @@ def main(stdscr):
             quit()
             
 
-wrapper(main)
+wrapper(main, get_index())
