@@ -2,6 +2,8 @@
 Start as a module
 """
 
+
+import contextlib
 import zipfile
 import os
 import argparse
@@ -58,16 +60,10 @@ def unpack(name, path="./"):
     with zipfile.ZipFile(name, mode="r") as zip:
         size = len(zip.namelist())
         for member in tqdm(iterable=zip.namelist(), total=size, desc="Extracting "):
-            try:
+            with contextlib.suppress(zipfile.error):
                 zip.extract(member, path)
                 member = os.path.join(path, member)
-                tqdm.write(
-                    f"{os.path.basename( member)}("
-                    + str(os.path.getsize(member))
-                    + "B)"
-                )
-            except zipfile.error as e:
-                pass
+                tqdm.write(f"{os.path.basename(member)}({str(os.path.getsize(member))}B)")
         zip.close()
     print("\n\n")
 
@@ -93,7 +89,7 @@ if not os.path.exists("VOICEVOX/VOICEVOX/") or args.force_reinstall is None:
     os.remove("VOICEVOX_engine.zip")
 else:
     for file_name in list(set(glob.glob("./**/**/**/VOICEVOX.exe", recursive=True))):
-        if get_size(os.path.dirname(file_name)) / 1024 / 1024 < 1200:
+        if get_size(os.path.dirname(file_name)) < 1258291200:
             download(VOICEVOX_ENGINE_URL, "VOICEVOX_engine.zip")
             if args.as_not_module is None:
                 unpack("VOICEVOX_engine.zip")
