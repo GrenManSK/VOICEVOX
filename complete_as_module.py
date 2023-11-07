@@ -123,7 +123,7 @@ def main(stdscr, input_index):
         string(
             curses.LINES - 3,
             int(curses.COLS / 3),
-            "Using character: " + name + " with code: " + current + "    ",
+            f"Using character: {name} with code: {current}    ",
         )
         string(curses.LINES - 2, int(curses.COLS / 3), "Using VOICEVOX")
         string(
@@ -133,7 +133,7 @@ def main(stdscr, input_index):
         )
 
         # Removes first item from history if history is over 5
-        if len(error) == 0:
+        if not error:
             if len(history) > (curses.LINES - 5) / 2 - 1:
                 history.pop(0)
             if len(history_jap) > (curses.LINES - 5) / 2 - 1:
@@ -182,7 +182,7 @@ def main(stdscr, input_index):
                 string(
                     int(((curses.LINES - 5) / 3) * 2 + 4) + times,
                     int(curses.COLS / 3),
-                    f"Error occured at line {i[0]} column {i[1]}: {i[3]}",
+                    f"Error occurred at line {i[0]} column {i[1]}: {i[3]}",
                 )
             for i in range(curses.LINES - 3):
                 string(i, int(curses.COLS / 3) - 1, "|")
@@ -293,9 +293,9 @@ def main(stdscr, input_index):
     string(current_row, 0, f"Loading {model_name}...")
     model = wh.load_model(model_name)
     string(current_row, 0, f"Loading {model_name} DONE", 1)
-    string(current_row, 0, f"Loading base.en...")
+    string(current_row, 0, "Loading base.en...")
     model_low = wh.load_model("base.en")
-    string(current_row, 0, f"Loading base.en DONE", 1)
+    string(current_row, 0, "Loading base.en DONE", 1)
 
     to_use = model
 
@@ -503,10 +503,7 @@ def main(stdscr, input_index):
 
     def check_key(key):
         if isinstance(key, str):
-            if keyboard.is_pressed(key):
-                return True
-            else:
-                return False
+            return bool(keyboard.is_pressed(key))
         if isinstance(key, list):
             approve = True
             for i in key:
