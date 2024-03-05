@@ -1,6 +1,6 @@
 keyboard==0.13.5
 mtranslate==1.8
-openai_whisper==20230124
+openai_whisper==20231117
 PyAudio==0.2.13
 PyAutoGUI==0.9.53
 pydub==0.25.1
