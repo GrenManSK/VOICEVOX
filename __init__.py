@@ -80,19 +80,13 @@ parser.add_argument("--as-not-module", choices=[], nargs="?", default=UNSPECIFIE
 args = parser.parse_args()
 
 
-if not os.path.exists("VOICEVOX/VOICEVOX/") or args.force_reinstall is None:
+if not os.path.exists("VOICEVOX/") or args.force_reinstall is None:
     download(VOICEVOX_ENGINE_URL, "VOICEVOX_engine.zip")
-    if args.as_not_module is None:
-        unpack("VOICEVOX_engine.zip")
-    else:
-        unpack("VOICEVOX_engine.zip", "VOICEVOX")
+    unpack("VOICEVOX_engine.zip")
     os.remove("VOICEVOX_engine.zip")
 else:
     for file_name in list(set(glob.glob("./**/**/**/VOICEVOX.exe", recursive=True))):
         if get_size(os.path.dirname(file_name)) < 1258291200:
             download(VOICEVOX_ENGINE_URL, "VOICEVOX_engine.zip")
-            if args.as_not_module is None:
-                unpack("VOICEVOX_engine.zip")
-            else:
-                unpack("VOICEVOX_engine.zip", "VOICEVOX")
+            unpack("VOICEVOX_engine.zip")
             os.remove("VOICEVOX_engine.zip")

@@ -292,9 +292,11 @@ def main(stdscr, input_index):
     string(current_row, 0, "Importing mixer DONE", 1)
 
     string(current_row, 0, f"Loading {model_name}...")
+    curses.endwin()
     model = wh.load_model(model_name)
     string(current_row, 0, f"Loading {model_name} DONE", 1)
     string(current_row, 0, "Loading base.en...")
+    curses.endwin()
     model_low = wh.load_model("base.en")
     string(current_row, 0, "Loading base.en DONE", 1)
 
